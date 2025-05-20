@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Define the project schema
 const projectSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -11,15 +10,30 @@ const projectSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: String, // Image URL or path to the image
+    type: String,
     required: true,
   },
   link: {
-    type: String, // Link to the project (optional)
-    required: true, // Make it required so that every project has a link
+    type: String,
+    required: true,
+  },
+  githubUrl: {
+    type: String,
+    required: false,
+  },
+  tags: {
+    type: [String],
+    default: [],
   }
-}, { timestamps: true }); // Timestamps will automatically add 'createdAt' and 'updatedAt'
+}, { timestamps: true });
+
+// Auto-lowercase tags
+projectSchema.pre('save', function (next) {
+  if (this.tags && Array.isArray(this.tags)) {
+    this.tags = this.tags.map(tag => tag.toLowerCase());
+  }
+  next();
+});
 
 const Project = mongoose.model('Project', projectSchema);
-
 module.exports = Project;
