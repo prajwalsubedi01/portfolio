@@ -8,6 +8,9 @@ require('dotenv').config
 connectDb();
 app.use(cors());
 app.use(express.json());
+app.get('/ping', (req, res) => {
+  res.status(200).send('✅ Server is awake and running!');
+});
 app.use('/api/contact',contactRoutes);
 app.use('/api/projects', projectRoutes);
 
